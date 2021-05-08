@@ -1,4 +1,4 @@
-# CodeZoo_CATM1_Arduino
+# LTE-Cat.m1 Based ECG Analysis and Feedback Solution
 > Development resource, Arduino library and example code for LTE-Cat.m1 module produced by CodeZoo
 
 
