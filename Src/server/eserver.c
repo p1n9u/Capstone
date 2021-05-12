@@ -3,6 +3,8 @@
 #include <unistd.h>
 #include <string.h>
 #include <signal.h>
+#include <fcntl.h>
+#include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -15,11 +17,11 @@
 int readLine(int , char *);
 
 int main(int argc, char *argv[]) {
-	int sfd, cfd, port, cLen;
+	int fd, sfd, cfd, port, cLen, size;
 	char recv_msg[BUF_SIZE], send_msg[BUF_SIZE];
 	struct sockaddr_in saddr, caddr;
 	struct hostent *hp;
-	char *haddrp;
+	char *haddrp, *f, *path;
 
 	signal(SIGCHLD, SIG_IGN);
 
@@ -46,10 +48,21 @@ int main(int argc, char *argv[]) {
 		printf("Server : %s(%d) connected.\n", haddrp, caddr.sin_port);
 
 		if ( fork() == 0 ) {
-			readLine(cfd, recv_msg);
-			printf("recv : %s\n", recv_msg);
-			//send_msg = recv_msg;
-			write(cfd, recv_msg, strlen(recv_msg) + 1);
+			
+			recv(cfd, &size, sizeof(int), 0);
+			if ( !size ) {
+				printf("No data\n");
+				exit(1);
+			}
+			f = (char *)malloc(sizeof(size));
+			path = (char *)malloc(30*sizeof(char));
+			path = "./test.txt";
+			recv(cfd, f, size, 0);
+			fd = open(path, O_CREAT | O_TRUNC | O_WRONLY, 0644);
+			if ( write(fd, f, size) == 0 ) {
+				printf("done\n");
+			}
+			close(fd);
 			close(cfd);
 			exit(0);
 		} else {
