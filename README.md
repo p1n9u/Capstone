@@ -1,10 +1,10 @@
-# LTE-Cat.m1 Based ECG Analysis and Feedback Solution
+# LTE-Cat.M1 Based ECG Analysis and Feedback Solution
 > Capstone Design
 
-### CodeZoo LTE-Cat.m1
+### Quectel BG96
 <img src="/Img/bg96.png">
 
-### Arduino MEGA2560 and CAT.M1
+### Arduino MEGA2560 / Quectel BG96 / AD8232
 <img src="/Img/product.jpg">
 
 > Development resource, Arduino library and example code for LTE-Cat.m1 module produced by CodeZoo
