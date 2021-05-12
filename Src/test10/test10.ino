@@ -70,7 +70,7 @@ void loop() {
     Serial.println('!');
     } else {
     // send the value of analog input 0:
-      Serial.println(analogRead(A0));
+      Serial.prin
     }
     //Wait for a bit to keep serial data from saturating
     delay(1);
@@ -87,6 +87,7 @@ void loop() {
     sendMsg += String(i) + "\n";
     i++;
   }
+  sendMsg += "\0";
   DebugSerial.println("data passed");
   if (BG96.actPDP() == 0) {
     DebugSerial.println("BG96 PDP Activation!!!");
