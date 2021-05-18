@@ -1,3 +1,7 @@
+// https://bitsoul.tistory.com/154
+// https://copynull.tistory.com/14?category=194491
+// https://blog.naver.com/PostView.nhn?blogId=xenostream&logNo=120197609525
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
