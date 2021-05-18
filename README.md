@@ -11,3 +11,12 @@
 
 
 > [ https://github.com/codezoo-ltd/CodeZoo_CATM1_Arduino ]
+
+### Server
+> Ubuntu 18.04.5 LTS
+
+
+> mysql : 5.7.34
+
+
+> nodejs : node - v12.22.1, npm - 6.14.12
