@@ -84,11 +84,13 @@ void loop() {
 
   int i=0;
   while (i<10) {
-    sendMsg += String(i) + "\n";
+    sendMsg += String(i) + "\t";
     i++;
   }
-  sendMsg += "\0";
+  // sendMsg += "\0";
   DebugSerial.println("data passed");
+
+  
   if (BG96.actPDP() == 0) {
     DebugSerial.println("BG96 PDP Activation!!!");
   }
@@ -98,7 +100,7 @@ void loop() {
 
 
     if ( BG96.socketSend(sendMsg.c_str()) == 0 ) {
-        DebugSerial.print("[TCP Send] >>  ");
+        DebugSerial.println("[TCP Send]");
         DebugSerial.println(sendMsg);
     } else {
         DebugSerial.println("Send Fail!!!");
@@ -112,6 +114,6 @@ void loop() {
     DebugSerial.println("BG96 PDP DeActivation!!!");
   }
 
-	delay(100);
+	delay(10000);
 
 }
