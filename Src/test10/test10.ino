@@ -77,14 +77,14 @@ void loop() {
     i++;
   }
   */
-  char _IP[] = "166.104.185.207";
-  int  _PORT = 8087;
+  char _IP[] = "166.104.185.49";
+  int  _PORT = 8088;
 
   String sendMsg = "";
 
   int i=0;
   while (i<10) {
-    sendMsg += String(i) + "\t";
+    sendMsg += String(i+10) + "\t";
     i++;
   }
   // sendMsg += "\0";
