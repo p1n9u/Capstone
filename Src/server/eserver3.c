@@ -23,6 +23,11 @@ int main(int argc, char *argv[]) {
 	struct hostent *hp;
 	char *haddrp, *path, *f;
 
+	char delimeter[] = "\t";
+	char *result;
+	char parsing[10][1024];
+
+
 	signal(SIGCHLD, SIG_IGN);
 
 	if ( argc != 2 ) {
@@ -49,20 +54,24 @@ int main(int argc, char *argv[]) {
 
 		if ( fork() == 0 ) {
 			readLine(cfd, recv_msg);
-			printf("%s", recv_msg); 
-			recv(cfd, &size, sizeof(char), 0);
-			if ( !size ) {
-				printf("No data\n");
-				exit(1);
+			//printf("%s", recv_msg);
+
+			int i=0;
+			result = strtok(recv_msg, delimeter);
+			while ( result != NULL ) {
+				strcpy(parsing[i++], result);
+				result = strtok(NULL, delimeter);
 			}
 
-			f = (char *)malloc(sizeof(size));
+			for ( i=0; i<10; i++ ) {
+				printf("[%d] : %s\n", i, parsing[i]);
+			}
+
 			path = (char *)malloc(30*sizeof(char));
 			path = "./test.txt";
-			recv(cfd, f, size, 0);
 			fd = open(path, O_CREAT | O_TRUNC | O_WRONLY, 0644);
-			if ( write(fd, f, size+1) == 0 ) {
-				printf("done\n");
+			if ( write(fd, recv_msg, strlen(recv_msg)+1) == 0 ) {
+				printf("file write\n");
 			}
 			close(fd);
 			close(cfd);
@@ -80,4 +89,3 @@ int readLine(int fd, char *str) {
 	} while ( n>0 && *str++ != '\0' );
 	return ( n>0 );
 }
-

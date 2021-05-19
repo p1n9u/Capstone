@@ -49,19 +49,11 @@ int main(int argc, char *argv[]) {
 
 		if ( fork() == 0 ) {
 			readLine(cfd, recv_msg);
-			printf("%s", recv_msg); 
-			recv(cfd, &size, sizeof(char), 0);
-			if ( !size ) {
-				printf("No data\n");
-				exit(1);
-			}
-
-			f = (char *)malloc(sizeof(size));
+			printf("%s", recv_msg);
 			path = (char *)malloc(30*sizeof(char));
 			path = "./test.txt";
-			recv(cfd, f, size, 0);
 			fd = open(path, O_CREAT | O_TRUNC | O_WRONLY, 0644);
-			if ( write(fd, f, size+1) == 0 ) {
+			if ( write(fd, recv_msg, strlen(recv_msg)+1) == 0 ) {
 				printf("done\n");
 			}
 			close(fd);
