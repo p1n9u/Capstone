@@ -11,7 +11,7 @@
 - 저지연, 저전력, 저비용, 실시간성, 광범위성을 확보하기 위한 적절한 Network 선정
 
 |Network|Compatibility|
-|---:|---:|
+|:---|:---|
 |`WBANs & WPANs`|1|
 |`WLANs`|2|
 |`Cellular`|3|
