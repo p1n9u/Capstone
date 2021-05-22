@@ -1,5 +1,5 @@
 # Real-Time Wireless EKG Monitoring & Feedback System
-====================================================
+-------------
 > For Capstone Design
 
 
