@@ -31,3 +31,4 @@
 - Ubuntu 18.04.5 LTS   
 - mysql : Ver 15.1 Distrib 10.5.10-MariaDB, for debian-linux-gnu (x86_64) using readline 5.2   
 - nodejs : node - v12.22.1, npm - 6.14.12   
+-------------
