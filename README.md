@@ -9,12 +9,13 @@
 
 [ 2. 개발 목표 ]
 - 저지연, 저전력, 저비용, 실시간성, 광범위성을 확보하기 위한 적절한 Network 선정
-Network | Compatibility
----|---:
- `WBANs & WPANs` | 1
- `WLANs` | 2
- `Cellular` | 3
- `LTE-MTC` | 4
+
+|Network|Compatibility|
+|---:|---:|
+|`WBANs & WPANs`|1|
+|`WLANs`|2|
+|`Cellular`|3|
+|`LTE-MTC`|4|
 
 ### Quectel BG96
 <img src="/Img/bg96.png">
