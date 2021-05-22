@@ -1,5 +1,5 @@
 # Real-Time Wireless EKG Monitoring & Feedback System
-=============
+====================================================
 > For Capstone Design
 
 
@@ -21,9 +21,6 @@
 - 원내환자와 비교했을 때 원내환자의 EKG Data 역시 최소한의 Quality를 유지해야함
 
 -------------
-### Quectel BG96
-<img src="/Img/bg96.png">
-
 ### Arduino MEGA2560 / Quectel BG96 / AD8232
 <img src="/Img/product.jpg">
 
