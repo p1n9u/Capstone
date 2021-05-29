@@ -13,6 +13,7 @@
 #define USER            "jenny"
 #define DELIMITER_C     '/'
 #define DELIMITER_S     "/"
+#define DATA_CNT        20
 
 /* define data type */
 typedef char element;
@@ -27,6 +28,7 @@ typedef struct QueueType {
 } QueueType;
 
 void init(QueueType *Q) {
+    memset(Q->queue, '\0', QUEUE_SIZE);
     Q->front = Q->rear = Q->cnt = 0;
 }
 
@@ -79,7 +81,7 @@ void pop_data(QueueType *Q) {
     int i=0, cnt=0;
     element e;
     memset(buf, '\0', BUF_SIZE);
-    while ( cnt < 10 ) {
+    while ( cnt < DATA_CNT ) {
         e = dequeue(Q);
         if ( e == DELIMITER_C ) {
             cnt++;
@@ -178,11 +180,12 @@ void loop() {
     ekg_data = random(400, 600);
     data += String(ekg_data) + DELIMITER_S;
     data.toCharArray(s, data.length());
+    DebugSerial.println("[push data]");
     DebugSerial.println(s);
 
     push_data(queue, s);
 
-    if ( (queue->cnt) > 1000 ) {
+    if ( (queue->cnt) > 1024 ) {
         pop_data(queue);
         if ( BG96.socketSend( buf, sizeof(buf) ) == 0 ) {
             DebugSerial.println("[TCP Send]");
