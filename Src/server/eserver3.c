@@ -12,7 +12,7 @@
 #include <netdb.h>
 
 #define DEFAULT_PROTOCOL 0
-#define BUF_SIZE 1024
+#define BUF_SIZE 2048
 
 int readLine(int , char *);
 
@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
 
 	char delimeter[] = "\t";
 	char *result;
-	char parsing[10][1024];
+	char parsing[30][1024];
 
 
 	signal(SIGCHLD, SIG_IGN);
@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
 		printf("Server : %s(%d) connected.\n", haddrp, caddr.sin_port);
 
 		if ( fork() == 0 ) {
-			readLine(cfd, recv_msg);
+			//readLine(cfd, recv_msg);
 			//printf("%s", recv_msg);
 
 			int i=0;
@@ -61,18 +61,13 @@ int main(int argc, char *argv[]) {
 			while ( result != NULL ) {
 				strcpy(parsing[i++], result);
 				result = strtok(NULL, delimeter);
+				printf("strtok!\n");
 			}
 
-			for ( i=0; i<10; i++ ) {
+			for ( i=0; i<30 ; i++ ) {
 				printf("[%d] : %s\n", i, parsing[i]);
 			}
 
-			path = (char *)malloc(30*sizeof(char));
-			path = "./test.txt";
-			fd = open(path, O_CREAT | O_TRUNC | O_WRONLY, 0644);
-			if ( write(fd, recv_msg, strlen(recv_msg)+1) == 0 ) {
-				printf("file write\n");
-			}
 			close(fd);
 			close(cfd);
 			exit(0);
