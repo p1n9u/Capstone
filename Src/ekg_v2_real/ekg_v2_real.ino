@@ -1,0 +1,109 @@
+#include <Arduino.h>
+#include "BG96.h"
+
+#define DebugSerial Serial
+#define M1Serial	Serial1
+#define ECGSerial Serial2
+#define PWR_PIN		2
+#define STAT_PIN	3
+#define BUF_SIZE 10000
+#define USER "jenny"
+
+char buf[BUF_SIZE];
+
+BG96 BG96(M1Serial, DebugSerial, PWR_PIN, STAT_PIN);
+
+void setup() {
+  M1Serial.begin(115200);
+	DebugSerial.begin(115200);
+  ECGSerial.begin(115200);
+  pinMode(10, INPUT); // Setup for leads off detection LO +
+  pinMode(11, INPUT); // Setup for leads off detection LO -
+
+	/* BG96 Power On Sequence */
+	if ( BG96.isPwrON() ) {
+	  DebugSerial.println("BG96 Power ON Status");
+		if ( BG96.pwrOFF() ) {
+		  DebugSerial.println("BG96 Power Off Error");
+		} else {
+			DebugSerial.println("BG96 Power Off Success");
+			DebugSerial.println("Module Power ON Sequence Start");
+			if ( BG96.pwrON() ) {
+				DebugSerial.println("BG96 Power ON Error");
+			} else {
+				DebugSerial.println("BG96 Power ON Success");
+			}
+	  }
+	} else {
+	  DebugSerial.println("BG96 Power OFF Status");
+		if ( BG96.pwrON() ) {
+			DebugSerial.println("BG96 Power ON Error");
+		} else {
+			DebugSerial.println("BG96 Power ON Success");
+		}
+	}
+
+	/* BG96 Module Initialization */
+	if ( BG96.init() ) {
+		DebugSerial.println("BG96 Module Error!!!");
+	}
+
+	/* BG96 Module Power Saving Mode Disable */
+	if ( BG96.disablePSM() ) {
+		DebugSerial.println("BG96 PSM Disable Error!!!");
+	}
+
+	/* Network Regsistraiton Check */
+	while ( BG96.canConnect() != 0 ) {
+		DebugSerial.println("Network not Ready !!!");
+		delay(2000);
+	}
+
+  DebugSerial.println("BG96 Module Ready!!!");
+
+  char _IP[] = "166.104.185.49";
+  int  _PORT = 8088;
+
+  if ( BG96.actPDP() == 0 ) {
+    DebugSerial.println("BG96 PDP Activation!!!");
+  }
+
+  if ( BG96.socketCreate(1, _IP, _PORT) == 0 ) {
+    DebugSerial.println("TCP Socket Create!!!");
+  }
+
+  String pushUser = USER;
+
+  if ( BG96.socketSend(pushUser.c_str()) == 0 ) {
+    DebugSerial.println("[Push User]");
+    DebugSerial.println(pushUser);
+  } else {
+    DebugSerial.println("Send Fail!!!");
+  }
+}
+
+void loop() {
+
+  if ( BG96.socketSend( buf, sizeof(buf) ) == 0 ) {
+    DebugSerial.println("Socket Send!!!");
+  }
+
+	delay(1);
+}
+
+/*
+if ( BG96.socketSend(sendMsg.c_str()) == 0 ) {
+        DebugSerial.println("[TCP Send]");
+        DebugSerial.println(sendMsg);
+    } else {
+        DebugSerial.println("Send Fail!!!");
+    }
+
+  if (BG96.socketClose() == 0) {
+    DebugSerial.println("Socket Close!!!");
+  }
+
+  if (BG96.deActPDP() == 0) {
+    DebugSerial.println("BG96 PDP DeActivation!!!");
+  }
+*/
