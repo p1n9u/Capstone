@@ -81,13 +81,25 @@ void loop() {
   int  _PORT = 8088;
 
   String sendMsg = "";
+  String sendMsg2 = "";
 
+  sendMsg += "jenny";
+  sendMsg += "/";
   int i=0;
-  while (i<10) {
-    sendMsg += String(i+10) + "\t";
+  while (i<100) {
+    sendMsg += String(i+300) + "/";
+    sendMsg += String(i+1) + "/";
+    delay(1);
     i++;
   }
-  // sendMsg += "\0";
+  while (i<200) {
+    sendMsg2 += String(i+300) + "/";
+    sendMsg2 += String(i+1) + "/";
+    delay(1);
+    i++;
+  }
+ 
+
   DebugSerial.println("data passed");
 
   
@@ -106,6 +118,13 @@ void loop() {
         DebugSerial.println("Send Fail!!!");
     }
 
+  if ( BG96.socketSend(sendMsg2.c_str()) == 0 ) {
+        DebugSerial.println("[TCP Send2]");
+        DebugSerial.println(sendMsg);
+  } else {
+        DebugSerial.println("Send Fail!!!");
+  }
+    
   if (BG96.socketClose() == 0) {
     DebugSerial.println("Socket Close!!!");
   }

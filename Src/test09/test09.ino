@@ -77,8 +77,8 @@ void loop() {
     i++;
   }
   
-  char _IP[] = "166.104.185.207";
-  int  _PORT = 8087;
+  char _IP[] = "166.104.185.49";
+  int  _PORT = 8088;
   // char sendBuffer[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
   //char sendBuffer2[] = "Hello CodeZoo!!!";
   // char recvBuffer[32];
