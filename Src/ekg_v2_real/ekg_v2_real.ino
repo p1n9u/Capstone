@@ -13,7 +13,9 @@
 #define USER            "jenny"
 #define DELIMITER_C     '|'
 #define DELIMITER_S     "|"
-#define DATA_CNT        20
+#define DATA_CNT        128
+#define TCP_IP          "166.104.185.49"
+#define TCP_PORT        8088;
 
 /* define data type */
 typedef char element;
@@ -69,27 +71,24 @@ element dequeue(QueueType *Q) {
 }
 
 void push_data(QueueType *Q, char *str) {
-  while ( *str != '\0' ) {
-    enqueue(Q, *str);
-    Q->cnt++;
-    *str++;
-  } 
+    while ( *str != '\0' ) {
+        enqueue(Q, *str);
+        Q->cnt++;
+        *str++;
+    } 
 }
 
 void pop_data(QueueType *Q) {
     int i=0, cnt=0;
     element e;
-    memset(buf, '\0', BUF_SIZE);
     while ( cnt < DATA_CNT ) {
         e = dequeue(Q);
         Q->cnt--;
-        if ( e == '/' ) {
+        if ( e == DELIMITER_C ) {
             cnt++;
         }
         buf[i++] = e;
     }
-    buf[i-1] = '\0';
-    buf[i] = '\0';
 } 
 
 QueueType *queue;
@@ -147,8 +146,8 @@ void setup() {
 
     DebugSerial.println("BG96 Module Ready!!!");
 
-    char _IP[] = "166.104.185.49";
-    int  _PORT = 8088;
+    char _IP[] = TCP_IP;
+    int  _PORT = TCP_PORT;
 
     if ( BG96.actPDP() == 0 ) {
         DebugSerial.println("BG96 PDP Activation!!!");
@@ -158,52 +157,59 @@ void setup() {
         DebugSerial.println("TCP Socket Create!!!");
     }
 
+    memset(buf, 0x00, BUF_SIZE);
     String pushUser = USER;
+    pushUser.toCharArray(buf, pushUser.length()+1);
     DebugSerial.print("[Input User] : ");
     DebugSerial.println(pushUser);
-    /*
-    if ( BG96.socketSend(pushUser.c_str()) == 0 ) {
+    
+    if ( BG96.socketSend( buf, strlen(buf)+1 ) == 0 ) {
         DebugSerial.print("[Push User to Server] : ");
         DebugSerial.println(pushUser);
+        DebugSerial.print("[buf len ] : ");
+        DebugSerial.println(strlen(buf)+1);
     } else {
         DebugSerial.println("Send Fail!!!");
     }
-    */
     delay(10000);   
 }
 
-int cnt = 1;
+int loop_cnt = 1;
 
 /* debug ekg data if not use comment */
 long ekg_data;
 
 void loop() {
+    if ( loop_cnt == 2001 ) {
+        loop_cnt = 1;
+    }
     String data = "";
-    char s[BUF_SIZE];
-    
+    char ch[BUF_SIZE];
+
+    data += String(loop_cnt) + DELIMITER_S;
     /* debug ekg data if not use comment */
     ekg_data = random(400, 600);
     data += String(ekg_data) + DELIMITER_S;
-    data += String(cnt) + DELIMITER_S;
-    cnt++;
-    data.toCharArray(s, data.length()+1);
-    DebugSerial.print("[push data] : ");
-    DebugSerial.println(s);
-       
-    push_data(queue, s);
     
-    if ( queue->cnt > 512 ) {
+    data.toCharArray(ch, data.length()+1);
+    DebugSerial.print("[push data] : ");
+    DebugSerial.println(ch);
+       
+    push_data(queue, ch);
+    
+    if ( queue->cnt > 1024 ) {
         pop_data(queue);
-        String sendMsg;
-        sendMsg = buf;
-        if ( BG96.socketSend(sendMsg.c_str()) == 0 ) {
-            DebugSerial.println("[TCP Send]");
-            DebugSerial.println(sendMsg);
+        if ( BG96.socketSend( buf, strlen(buf)+1 ) == 0 ) {
+            DebugSerial.println("[TCP Send] : ");
+            DebugSerial.println(buf);
+            DebugSerial.print("[buf len] : ");
+            DebugSerial.println(strlen(buf)+1);
         } else {
             DebugSerial.println("Send Fail!!!");
         }
     }
 
+    loop_cnt++;
     delay(1);
 }
 /*
