@@ -1,4 +1,4 @@
-/* library */
+/* include library */
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -7,87 +7,132 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
 #include "/usr/include/mysql/mysql.h"
 
-/* define */
+/* define macro */
 #define DEFAULT_PROTOCOL 0
-#define DATA_CNT 21
+#define DATA_CNT 4
 #define DATA_LEN 32
 #define BUF_SIZE 1024
 #define Q_SIZE 128
+#define TRUE 1
+#define FALSE 0
 
-/* global */
+/* declare global */
 const char *host = "localhost";
 const char *user = "root";
 const char *pw = "asdf1234.";
 const char *db = "testdb";
 char query[Q_SIZE];
+char usr[DATA_LEN];
+char buf[BUF_SIZE];
+int usr_flag = FALSE;
 
-/* func proto */
-int readLine(int , char *);
+int read_buf(int, char *);
 
 /* main */
 int main(int argc, char *argv[]) {
-	int fd, sfd, cfd, port, cLen, size;
-	char recv_msg[BUF_SIZE], send_msg[BUF_SIZE];
+
+	int clen, sfd, cfd, n;
 	struct sockaddr_in saddr, caddr;
-	struct hostent *hp;
-	char *haddrp, *path, *f;
-
-	char delimeter[] = "|";
-	char *result;
-	char parsing[DATA_CNT][DATA_LEN];
-
-
-	signal(SIGCHLD, SIG_IGN);
+	char *haddrp;
 
 	if ( argc != 2 ) {
-		fprintf(stderr, "Usage : %s <port> \n", argv[0]);
+		printf("input port err\n");
 		exit(0);
 	}
 
-	port = atoi(argv[1]);
-	sfd = socket(AF_INET, SOCK_STREAM, DEFAULT_PROTOCOL);
+	if ( (sfd = socket(AF_INET, SOCK_STREAM, DEFAULT_PROTOCOL)) == -1 ) {
+		printf("sfd socket err\n");
+		exit(0);
+	}
 
-	bzero((char *)&saddr, sizeof(saddr));
+	memset(&saddr, 0x00, sizeof(saddr));
 	saddr.sin_family = AF_INET;
 	saddr.sin_addr.s_addr = htonl(INADDR_ANY);
-	saddr.sin_port = htons((unsigned short)port);
+	saddr.sin_port = htons(atoi(argv[1]));
 
-	bind(sfd, (struct sockaddr *)&saddr, sizeof(saddr));
-	listen(sfd, 5);
+	if ( bind(sfd, (struct sockaddr *) &saddr, sizeof(saddr)) < 0 ) {
+		printf("sfd bind err\n");
+		exit(0);
+	}
 
-	while(1) {
-		cLen = sizeof(caddr);
-		cfd = accept(sfd, (struct sockaddr *)&caddr, &cLen);
-		haddrp = inet_ntoa(caddr.sin_addr);
-		printf("Server : %s(%d) connected.\n", haddrp, caddr.sin_port);
+	if ( listen(sfd, 5) < 0 ) {
+		printf("sfd listen err\n");
+		exit(0);
+	}
 
+	memset(buf, '\0', sizeof(buf));
+	printf("==================================================\n");
+	printf("[ waiting for connection request ]\n");
 
+	while(TRUE) {
+		clen = sizeof(caddr);
+		cfd = accept(sfd, (struct sockaddr *) &caddr, (socklen_t *) &clen);
 
-		if ( fork() == 0 ) {
-			memset(&recv_msg, '\0', BUF_SIZE);
-			readLine(cfd, recv_msg);
-			//printf("%s\n", recv_msg);
-
-			int i;
-			result = strtok(recv_msg, delimeter);
-			while ( result != NULL ) {
-				strcpy(parsing[i++], result);
-				result = strtok(NULL, delimeter);
-			}
-
-			for ( i=0; i<DATA_CNT; i++ ) {
-				printf("[%d] : %s\n", i, parsing[i]);
-			}
-			
-			close(cfd);
+		if ( cfd < 0 ) {
+			printf("cfd accept err\n");
 			exit(0);
+		}
 
+		haddrp = inet_ntoa(caddr.sin_addr);
+		printf("    >> client : %s(%d) connected\n", haddrp, caddr.sin_port);
+
+		while(TRUE) {
+			int status, fd[2];
+			pipe(fd);
+			pid_t pid;
+			pid = fork();
+			if ( usr_flag == FALSE ) {
+				if ( pid == 0 ) {
+					printf("[ waiting for usr input... ]\n");
+					n = read(cfd, buf, sizeof(buf));
+					write(fd[1], buf, sizeof(buf));
+					exit(0);
+				} else {
+					waitpid(pid, &status, 0);
+					read(fd[0], buf, sizeof(buf));
+					sprintf(usr,"%s", buf);
+					printf("    >> usr name passed : (%s)\n", usr);
+					printf("==================================================\n");
+					usr_flag = TRUE;
+				}
+			} else {
+				if ( pid == 0 ) {
+					n = read(cfd, buf, sizeof(buf));
+					printf("[%s]$ %s\n", usr, buf);
+					exit(0);
+				} else {
+					waitpid(pid, &status, 0);
+				}
+			}
+
+		}
+		printf("exit\n");
+		close(cfd);
+
+	}
+
+	close(sfd);
+	return 0;
+
+}
+
+int read_buf(int fd, char *str) {
+	int n;
+	do {
+		n = read(fd, str, 1);
+	} while ( n > 0 && *str++ != 0x00 );
+	return ( n > 0 );
+}
+
+/*
+	while(1) {
 			MYSQL *connection = NULL;
         		MYSQL conn;
         		MYSQL_RES *sql_result;
@@ -162,12 +207,5 @@ int main(int argc, char *argv[]) {
 			close(cfd);
 		}
 	}
-}
 
-int readLine(int fd, char *str) {
-	int n;
-	do {
-		n = read(fd, str, 1);
-	} while ( n>0 && *str++ != '\0' );
-	return ( n>0 );
-}
+*/
