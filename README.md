@@ -9,8 +9,9 @@
 - So, we plan to develop a real-time wireless EKG monitoring system that is easy to use outside while minimizing EKG data transfer latency.   
 - Then, in the emergency situation, the patient's appropriate first-line treatment will be taken and survival rates will rise extremely.
 
-[ 2. 개발 목표 ]
-- 저지연, 저전력, 저비용, 실시간성, 광범위성을 확보하기 위한 적절한 Network 선정
+[ 2. Development Goals ]
+- Proper network selection for low-cost, low-power, continuous data, low-latency, wide-range
+-- : LTE-MTC
 
 |Network|Compatibility|
 |:---|:---|
