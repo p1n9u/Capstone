@@ -9,26 +9,25 @@
 #define PWR_PIN         2
 #define STAT_PIN        3
 #define BUF_SIZE        1024
-#define QUEUE_SIZE      10000
+#define QUEUE_SIZE      2048
 #define USER            "jenny"
-#define DELIMITER_C     '/'
-#define DELIMITER_S     "/"
+#define DELIMITER_C     '|'
+#define DELIMITER_S     "|"
 #define DATA_CNT        20
 
 /* define data type */
 typedef char element;
 
-/* declare buf */
+/* declare global */
 element buf[BUF_SIZE];
 
-/* implement circular queue */
+/* implement queue */
 typedef struct QueueType {
     element queue[QUEUE_SIZE];
     int front, rear, cnt;
 } QueueType;
 
 void init(QueueType *Q) {
-    memset(Q->queue, '\0', QUEUE_SIZE);
     Q->front = Q->rear = Q->cnt = 0;
 }
 
@@ -38,6 +37,7 @@ QueueType *create_queue(void) {
         DebugSerial.println("create queue err");
     } else {
         init(new_queue);
+        DebugSerial.println("create queue success");
         return new_queue;
     }
 }
@@ -52,29 +52,28 @@ int is_full(QueueType *Q) {
 
 void enqueue(QueueType *Q, element item) {
     if ( is_full(Q) ) {
-        DebugSerial.println("enqueue err");;
+        DebugSerial.println("queue overflow");
     } else {
         Q->rear = (Q->rear+1)%QUEUE_SIZE;
         Q->queue[Q->rear] = item;
-        Q->cnt++;
     }
 }
 
 element dequeue(QueueType *Q) {
     if ( is_empty(Q) ) {
-        DebugSerial.println("dequeue err");
+        DebugSerial.println("queue underflow");
     } else {
         Q->front = (Q->front+1)%QUEUE_SIZE;
-        Q->cnt--;
         return Q->queue[Q->front];
     }
 }
 
 void push_data(QueueType *Q, char *str) {
-    while ( *str != '\0' ) {
-        enqueue(Q, *str);
-        *str++;
-    } 
+  while ( *str != '\0' ) {
+    enqueue(Q, *str);
+    Q->cnt++;
+    *str++;
+  } 
 }
 
 void pop_data(QueueType *Q) {
@@ -83,15 +82,17 @@ void pop_data(QueueType *Q) {
     memset(buf, '\0', BUF_SIZE);
     while ( cnt < DATA_CNT ) {
         e = dequeue(Q);
-        if ( e == DELIMITER_C ) {
+        Q->cnt--;
+        if ( e == '/' ) {
             cnt++;
         }
         buf[i++] = e;
     }
-}
+    buf[i-1] = '\0';
+    buf[i] = '\0';
+} 
 
-
-QueueType *queue = create_queue();
+QueueType *queue;
 BG96 BG96(M1Serial, DebugSerial, PWR_PIN, STAT_PIN);
 
 void setup() {
@@ -100,7 +101,8 @@ void setup() {
     ECGSerial.begin(115200);
     pinMode(10, INPUT); // Setup for leads off detection LO +
     pinMode(11, INPUT); // Setup for leads off detection LO -
-
+    queue = create_queue();
+    
     /* debug ekg data if not use comment */
     randomSeed(analogRead(0));
 
@@ -157,14 +159,17 @@ void setup() {
     }
 
     String pushUser = USER;
-
+    DebugSerial.print("[Input User] : ");
+    DebugSerial.println(pushUser);
+    /*
     if ( BG96.socketSend(pushUser.c_str()) == 0 ) {
-        DebugSerial.println("[Push User]");
+        DebugSerial.print("[Push User to Server] : ");
         DebugSerial.println(pushUser);
     } else {
         DebugSerial.println("Send Fail!!!");
     }
-    
+    */
+    delay(10000);   
 }
 
 int cnt = 1;
@@ -174,29 +179,33 @@ long ekg_data;
 
 void loop() {
     String data = "";
-    char *s;
-
+    char s[BUF_SIZE];
+    
     /* debug ekg data if not use comment */
     ekg_data = random(400, 600);
     data += String(ekg_data) + DELIMITER_S;
-    data.toCharArray(s, data.length());
-    DebugSerial.println("[push data]");
+    data += String(cnt) + DELIMITER_S;
+    cnt++;
+    data.toCharArray(s, data.length()+1);
+    DebugSerial.print("[push data] : ");
     DebugSerial.println(s);
-
+       
     push_data(queue, s);
-
-    if ( (queue->cnt) > 1024 ) {
+    
+    if ( queue->cnt > 512 ) {
         pop_data(queue);
-        if ( BG96.socketSend( buf, sizeof(buf) ) == 0 ) {
+        String sendMsg;
+        sendMsg = buf;
+        if ( BG96.socketSend(sendMsg.c_str()) == 0 ) {
             DebugSerial.println("[TCP Send]");
-            DebugSerial.println(buf);
+            DebugSerial.println(sendMsg);
         } else {
             DebugSerial.println("Send Fail!!!");
         }
     }
+
     delay(1);
 }
-
 /*
   if (BG96.socketClose() == 0) {
     DebugSerial.println("Socket Close!!!");
