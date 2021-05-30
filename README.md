@@ -11,7 +11,6 @@
 
 [ 2. Development Goals ]
 - Proper network selection for low-cost, low-power, continuous data, low-latency, wide-range : LTE-MTC   
-- Maintaining EKG data that ensures minimum quality for high-quality remote care for outpatients compared to in-hospital patients
 
 |Network|Compatibility|
 |:---|:---|
@@ -20,7 +19,7 @@
 |`Cellular`|3|
 |`LTE-MTC`|4|
 
-- 원내환자와 비교했을 때 원내환자의 EKG Data 역시 최소한의 Quality를 유지해야함
+- Maintaining EKG data that ensures minimum quality for high-quality remote care for outpatients compared to in-hospital patients   
 
 < 추가예정 >   
 [ 3. 설계 및 제작과정 ]   
