@@ -191,8 +191,9 @@ int main(int argc, char *argv[]) {
 								return 1;
 							}
 						}
-
-						if ( atoi(parsing[0]) > atoi(parsing[DATA_CNT-2]) ) {
+						int index_f, index_r;
+						index_f = atoi(parsing[0]); index_r = atoi(parsing[DATA_CNT-2]);
+						if ( index_f < index_r ) {
 							printf("[ USER : %s QUERY ] $ ", usr);
 							printf("select * from %s where num>=%d and num<=%d\n", usr, atoi(parsing[0])-1, atoi(parsing[DATA_CNT-2])-1);
 							sprintf(query, "select * from %s where num>=%d and num<=%d", usr, atoi(parsing[0])-1, atoi(parsing[DATA_CNT-2])-1);
@@ -210,7 +211,7 @@ int main(int argc, char *argv[]) {
 							printf("+-------+-------+-------+--------+-----------+-------+\n");
 						} else {
 							printf("[ USER : %s QUERY1 ] $ ", usr);
-                                                        printf("select * from %s where num>=%d\n", usr, atoi(parsing[0])-1);
+                                                        printf("select * from %s where num>=%d and num<=1999\n", usr, atoi(parsing[0])-1);
 							printf("[ USER : %s QUERY2 ] $ ", usr);
                                                         printf("select * from %s where num<=%d\n", usr, atoi(parsing[DATA_CNT-2])-1);
 
@@ -218,7 +219,7 @@ int main(int argc, char *argv[]) {
                                                         printf("|  num  | lead2 |   v2  | analog | user_name |  sec  |\n");
                                                         printf("+-------+-------+-------+--------+-----------+-------+\n");
 
-							sprintf(query, "select * from %s where num>=%d", usr, atoi(parsing[0])-1);
+							sprintf(query, "select * from %s where num>=%d and num<=1999", usr, atoi(parsing[0])-1);
                                                         state = mysql_query(connection, query);
 							if ( state == 0 ) {
                                                                 sql_result = mysql_store_result(connection);
