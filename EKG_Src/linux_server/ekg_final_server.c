@@ -122,7 +122,7 @@ int main(int argc, char *argv[]) {
 				} else {
 					waitpid(pid, &status, 0);
 					read(fd[0], buf, sizeof(buf));
-					//printf("[%s]$ %s\n", usr, buf);
+					printf("[%s]$ Buf received data, prosseing...\n", usr);
 
 					int i=0;
 					result = strtok(buf, delimiter);
@@ -191,6 +191,7 @@ int main(int argc, char *argv[]) {
 								return 1;
 							}
 						}
+/*
 						int index_f, index_r;
 						index_f = atoi(parsing[0]); index_r = atoi(parsing[DATA_CNT-2]);
 						if ( index_f < index_r ) {
@@ -240,7 +241,9 @@ int main(int argc, char *argv[]) {
                                                         }
 
                                                         printf("+-------+-------+-------+--------+-----------+-------+\n");
+
 						}
+*/
 						mysql_close(connection);
         				}
 				}
