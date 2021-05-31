@@ -3,13 +3,14 @@
 > For Capstone Design
 
 
-[ 1. 주제선정 및 배경 ]
-- 기존의 외래환자는 외부에서 사용하기 힘든 hardwired system이 요구되거나, 간편한 EKG Monitoring System을 이용하더라도 delay가 존재하여 응급상황 발생시 epinephrine 또는 lidocaine 투여와 같은 적절한 first-line treatments가 취해지기 어려운 문제가 있음
-- 외부에서 사용하기 편하면서도 delay를 최소화하여 심질환 환자의 응급상황 발생시 적절한 first-line treatments가 이루어지게 하므로서 환자의 생존률을 높이고자함
-- 이를 위해 'Real-Time Wireless EKG Monitoring & Feedback System'을 개발하고자 함
+[ 1. Backgrounds ]
+- Currently, high-quality remote medical treatment for outpatients with heart disease requires hard-wired systems that are difficult to use outside, or there is a long latency problem in data transferring, even if there is an easy-to-use system.   
+- Even in the event of an emergency due to this problem, proper first-line treatments such as epinephrine or lidocaine administration are difficult to take.   
+- So, we plan to develop a real-time wireless EKG monitoring system that is easy to use outside while minimizing EKG data transfer latency.   
+- Then, in the emergency situation, the patient's appropriate first-line treatment will be taken and survival rates will rise extremely.
 
-[ 2. 개발 목표 ]
-- 저지연, 저전력, 저비용, 실시간성, 광범위성을 확보하기 위한 적절한 Network 선정
+[ 2. Development Goals ]
+- Proper network selection for low-cost, low-power, continuous data, low-latency, wide-range : LTE-MTC   
 
 |Network|Compatibility|
 |:---|:---|
@@ -18,7 +19,7 @@
 |`Cellular`|3|
 |`LTE-MTC`|4|
 
-- 원내환자와 비교했을 때 원내환자의 EKG Data 역시 최소한의 Quality를 유지해야함
+- Maintaining EKG data that ensures minimum quality for high-quality remote care for outpatients compared to in-hospital patients   
 
 < 추가예정 >   
 [ 3. 설계 및 제작과정 ]   
