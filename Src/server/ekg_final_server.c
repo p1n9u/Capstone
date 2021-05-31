@@ -154,7 +154,7 @@ int main(int argc, char *argv[]) {
 		                		printf("connection\n");
                 				return 1;
 					} else {
-                				printf("connection success\n");
+                				printf("DB connection success\n");
                 				int i, state = 0;
 
 						if ( mysql_select_db(&conn, db)) {
@@ -173,7 +173,7 @@ int main(int argc, char *argv[]) {
                                         		mysql_free_result(sql_result);
                                 		}
 */
-						printf("updating data...\n");
+						printf("DB updating data...\n");
 						int condition = DATA_CNT/2;
 						for ( i=0; i<condition; i++ ) {
                         				sprintf(query, "update %s set analog=%s where num=%d", usr, parsing[i*2+1], atoi(parsing[i*2])-1);
@@ -192,22 +192,54 @@ int main(int argc, char *argv[]) {
 							}
 						}
 
+						if ( atoi(parsing[0]) > atoi(parsing[DATA_CNT-2]) ) {
+							printf("[ USER : %s QUERY ] $ ", usr);
+							printf("select * from %s where num>=%d and num<=%d\n", usr, atoi(parsing[0])-1, atoi(parsing[DATA_CNT-2])-1);
+							sprintf(query, "select * from %s where num>=%d and num<=%d", usr, atoi(parsing[0])-1, atoi(parsing[DATA_CNT-2])-1);
+							state = mysql_query(connection, query);
+							printf("+-------+-------+-------+--------+-----------+-------+\n");
+							printf("|  num  | lead2 |   v2  | analog | user_name |  sec  |\n");
+							printf("+-------+-------+-------+--------+-----------+-------+\n");
+                					if ( state == 0 ) {
+                        					sql_result = mysql_store_result(connection);
+                        					while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
+                                					printf("| %5s | %5s | %5s | %6s | %9s | %5s |\n", sql_row[0], sql_row[1], sql_row[2], sql_row[3], sql_row[4],sql_row[5]);
+                        					}
+                      	 					mysql_free_result(sql_result);
+                					}
+							printf("+-------+-------+-------+--------+-----------+-------+\n");
+						} else {
+							printf("[ USER : %s QUERY1 ] $ ", usr);
+                                                        printf("select * from %s where num>=%d\n", usr, atoi(parsing[0])-1);
+							printf("[ USER : %s QUERY2 ] $ ", usr);
+                                                        printf("select * from %s where num<=%d\n", usr, atoi(parsing[DATA_CNT-2])-1);
 
-						printf("[ USER : %s ] $ ", usr);
-						printf("select * from %s where num>=%d and num<=%d\n", usr, atoi(parsing[0])-1, atoi(parsing[DATA_CNT-2])-1);
-						sprintf(query, "select * from %s where num>=%d and num<=%d", usr, atoi(parsing[0])-1, atoi(parsing[DATA_CNT-2])-1);
-						state = mysql_query(connection, query);
-						printf("+-------+-------+-------+--------+-----------+-------+\n");
-						printf("|  num  | lead2 |   v2  | analog | user_name |  sec  |\n");
-						printf("+-------+-------+-------+--------+-----------+-------+\n");
-                				if ( state == 0 ) {
-                        				sql_result = mysql_store_result(connection);
-                        				while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-                                				printf("| %5s | %5s | %5s | %6s | %9s | %5s |\n", sql_row[0], sql_row[1], sql_row[2], sql_row[3], sql_row[4],sql_row[5]);
-                        				}
-                      	 				mysql_free_result(sql_result);
-                				}
-						printf("+-------+-------+-------+--------+-----------+-------+\n");
+                                                        printf("+---------------+-------+--------+-----------+-------+\n");
+                                                        printf("|  num  | lead2 |   v2  | analog | user_name |  sec  |\n");
+                                                        printf("+-------+-------+-------+--------+-----------+-------+\n");
+
+							sprintf(query, "select * from %s where num>=%d", usr, atoi(parsing[0])-1);
+                                                        state = mysql_query(connection, query);
+							if ( state == 0 ) {
+                                                                sql_result = mysql_store_result(connection);
+                                                                while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
+                                                                        printf("| %5s | %5s | %5s | %6s | %9s | %5s |\n", sql_row[0], sql_row[1], sql_row[2], sql_row[3], sql_row[4],sql_row[5]);
+                                                                }
+                                                                mysql_free_result(sql_result);
+                                                        }
+
+							sprintf(query, "select * from %s where num<=%d", usr, atoi(parsing[DATA_CNT-2])-1);
+                                                        state = mysql_query(connection, query);
+							if ( state == 0 ) {
+                                                                sql_result = mysql_store_result(connection);
+                                                                while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
+                                                                        printf("| %5s | %5s | %5s | %6s | %9s | %5s |\n", sql_row[0], sql_row[1], sql_row[2], sql_row[3], sql_row[4],sql_row[5]);
+                                                                }
+                                                                mysql_free_result(sql_result);
+                                                        }
+
+                                                        printf("+-------+-------+-------+--------+-----------+-------+\n");
+						}
 						mysql_close(connection);
         				}
 				}
