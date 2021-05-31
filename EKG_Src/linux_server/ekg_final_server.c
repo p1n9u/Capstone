@@ -211,7 +211,7 @@ int main(int argc, char *argv[]) {
 							printf("+-------+-------+-------+--------+-----------+-------+\n");
 						} else {
 							printf("[ USER : %s QUERY1 ] $ ", usr);
-                                                        printf("select * from %s where num>=%d and num<=1999\n", usr, atoi(parsing[0])-1);
+                                                        printf("select * from %s where num>=%d and num<=2000\n", usr, atoi(parsing[0])-1);
 							printf("[ USER : %s QUERY2 ] $ ", usr);
                                                         printf("select * from %s where num<=%d\n", usr, atoi(parsing[DATA_CNT-2])-1);
 
