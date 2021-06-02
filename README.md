@@ -59,7 +59,6 @@
 
 [ 6. Reference ]   
 
-> Development resource, Arduino library and example code for LTE-Cat.m1 module produced by CodeZoo   
-> [ https://github.com/codezoo-ltd/CodeZoo_CATM1_Arduino ]
-
+- [1] "Scalable coding and prioritized transmission of ecgfor low-latency cardiac monitoring over cellular m2m networks." IEEE Access 6: 8189-8200.   
+- [2] https://github.com/codezoo-ltd/CodeZoo_CATM1_Arduino
 -------------
