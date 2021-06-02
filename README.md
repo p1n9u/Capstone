@@ -54,7 +54,7 @@ https://youtu.be/-y_3mwoVeGI
 
 [ 4. ECG Waveform Interpretation ]   
 
-<img src="/Img/ui.png">
+<img src="/Img/interpretation.png">
 
 [ 5. Improvement and Development direction ]
 
