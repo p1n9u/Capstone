@@ -9,7 +9,7 @@
 > For Capstone Design
 
 [ 0. Demo ]
-https://youtu.be/-y_3mwoVeGI
+<iframe width="560" height="315" src="https://www.youtube.com/embed/-y_3mwoVeGI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 
 [ 1. Project Goal ]
