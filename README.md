@@ -24,7 +24,9 @@
 
 [ 3. Design and fabrication process ]   
 - Testbed
+<img src="/Img/testbed.png">
 - System block diagram
+<img src="/Img/testbed.png">
 - ECG Signal Acquisition and Transmission
 - ECG Waveform Presentation
 - User Interface
@@ -35,7 +37,7 @@
 
 -------------
 ### Arduino MEGA2560 / Quectel BG96 / AD8232
-<img src="/Img/product.jpg">
+
 
 > Development resource, Arduino library and example code for LTE-Cat.m1 module produced by CodeZoo   
 > [ https://github.com/codezoo-ltd/CodeZoo_CATM1_Arduino ]
