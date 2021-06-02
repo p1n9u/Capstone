@@ -24,10 +24,17 @@
 
 [ 3. Design and fabrication process ]   
 - Testbed
+
 <img src="/Img/testbed.png">
+
 - System block diagram
-<img src="/Img/testbed.png">
+
+<img src="/Img/diagram.png">
+
 - ECG Signal Acquisition and Transmission
+
+<img src="/Img/signal.png">
+
 - ECG Waveform Presentation
 - User Interface
 
