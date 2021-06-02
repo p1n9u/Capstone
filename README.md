@@ -36,7 +36,12 @@
 <img src="/Img/signal.png">
 
 - ECG Waveform Presentation
+
+<img src="/Img/waveform.png">
+
 - User Interface
+
+<img src="/Img/ui.png">
 
 [ 4. ECG Waveform Interpretation ]   
 [ 5. Improvement and Development direction ]   
