@@ -44,7 +44,13 @@
 <img src="/Img/ui.png">
 
 [ 4. ECG Waveform Interpretation ]   
-[ 5. Improvement and Development direction ]   
+
+<img src="/Img/ui.png">
+
+[ 5. Improvement and Development direction ]
+
+<img src="/Img/improve.png">
+
 [ 6. Reference ]   
 
 -------------
