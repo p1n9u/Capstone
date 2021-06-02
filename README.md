@@ -8,7 +8,7 @@
 -------------
 > For Capstone Design
 
-[ 0. Demo ]   
+[ 0. Demo ] : Click Image to Watch Demo Video!  
 
 
 [![Video Label](/Img/sum.jpg)](https://youtu.be/-y_3mwoVeGI)   
